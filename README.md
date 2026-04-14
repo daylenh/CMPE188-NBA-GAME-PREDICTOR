@@ -24,7 +24,6 @@ Primary data sources:
 ---
 
 ## Planned System / Model Approach
-We plan to:
 - Collect NBA game and team data using nba_api
 - Clean and merge datasets into a unified format
 - Engineer features such as:
@@ -33,8 +32,8 @@ We plan to:
   - Recent 5–10 game performance
   - Home vs away performance
   - Shooting efficiency stats
-- Train a machine learning model to predict game outcomes (win/loss)
-- Evaluate feature importance to determine key factors in winning games
+- We plan to train a machine learning model to predict game outcomes (win/loss)
+- We plan to evaluate feature importance to determine key factors in winning games
 
 ---
 

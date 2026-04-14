@@ -38,7 +38,7 @@ Primary data sources:
 ---
 
 ## Current Implementation Progress
-- GitHub repository created and team members added
+- GitHub repository created, and team members contributed via commits
 - Initial project structure set up
 - Beginning data collection using nba_api
 - Setting up preprocessing pipeline for NBA datasets

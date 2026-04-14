@@ -43,3 +43,7 @@ We plan to:
 - Initial project structure set up
 - Beginning data collection using nba_api
 - Setting up preprocessing pipeline for NBA datasets
+
+---
+
+## How to Run

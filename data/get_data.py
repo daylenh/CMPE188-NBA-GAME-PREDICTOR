@@ -1,5 +1,4 @@
 from nba_api.stats.endpoints import leaguegamefinder
-import pandas as pd
 import os
 
 def fetch_nba_games():

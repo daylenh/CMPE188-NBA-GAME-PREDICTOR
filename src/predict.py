@@ -13,13 +13,54 @@ def load_model_and_features():
 def get_team_features(team_abbr, processed_df):
     """
     Get current features for a team from processed data.
+    Calculate rolling statistics on the fly.
     """
-    # For simplicity, get the latest game features for the team
-    team_games = processed_df[processed_df['TEAM_ABBREVIATION'] == team_abbr].sort_values('GAME_DATE')
+    team_games = processed_df[processed_df['TEAM_ABBREVIATION'] == team_abbr].copy()
     if team_games.empty:
         return None
+    
+    # Sort by date
+    team_games = team_games.sort_values('GAME_DATE')
+    
+    # Calculate rolling statistics
+    team_games['WIN_PCT'] = (team_games['WL'] == 'W').expanding().mean()
+    team_games['AVG_PTS'] = team_games['PTS'].expanding().mean()
+    team_games['RECENT_WIN_PCT_5'] = (team_games['WL'] == 'W').rolling(5, min_periods=1).mean()
+    
+    # Home vs away performance
+    home_games = team_games[team_games['MATCHUP'].str.contains('vs.')]
+    away_games = team_games[team_games['MATCHUP'].str.contains('@')]
+    
+    if not home_games.empty:
+        home_games['HOME_WIN_PCT'] = (home_games['WL'] == 'W').expanding().mean()
+        team_games = team_games.merge(home_games[['GAME_ID', 'HOME_WIN_PCT']], on='GAME_ID', how='left')
+    else:
+        team_games['HOME_WIN_PCT'] = 0.5  # Default
+    
+    if not away_games.empty:
+        away_games['AWAY_WIN_PCT'] = (away_games['WL'] == 'W').expanding().mean()
+        team_games = team_games.merge(away_games[['GAME_ID', 'AWAY_WIN_PCT']], on='GAME_ID', how='left')
+    else:
+        team_games['AWAY_WIN_PCT'] = 0.5  # Default
+    
+    # Shooting stats
+    team_games['AVG_FG_PCT'] = team_games['FG_PCT'].expanding().mean()
+    team_games['AVG_FG3_PCT'] = team_games['FG3_PCT'].expanding().mean()
+    team_games['AVG_FT_PCT'] = team_games['FT_PCT'].expanding().mean()
+    
+    # Get latest game features
     latest = team_games.iloc[-1]
-    features = {col: latest[col] for col in processed_df.columns if col.startswith(('WIN_PCT', 'AVG_PTS', 'RECENT_WIN_PCT_5', 'HOME_WIN_PCT', 'AWAY_WIN_PCT', 'AVG_FG_PCT', 'AVG_FG3_PCT', 'AVG_FT_PCT'))}
+    features = {
+        'WIN_PCT': latest['WIN_PCT'],
+        'AVG_PTS': latest['AVG_PTS'],
+        'RECENT_WIN_PCT_5': latest['RECENT_WIN_PCT_5'],
+        'HOME_WIN_PCT': latest.get('HOME_WIN_PCT', 0.5),
+        'AWAY_WIN_PCT': latest.get('AWAY_WIN_PCT', 0.5),
+        'AVG_FG_PCT': latest['AVG_FG_PCT'],
+        'AVG_FG3_PCT': latest['AVG_FG3_PCT'],
+        'AVG_FT_PCT': latest['AVG_FT_PCT']
+    }
+    
     return features
 
 def predict_game(home_team, away_team):

@@ -46,3 +46,19 @@ Primary data sources:
 ---
 
 ## How to Run
+To run the full NBA prediction pipeline, simply execute:
+```
+python pipeline.py
+```
+This single command will automatically run the entire end-to-end workflow:
+
+- Data Collection (data/get_data.py):
+Fetches raw NBA data.
+- Data Preprocessing (src/preprocessing.py):
+Cleans and prepares the dataset.
+- Feature Engineering (src/feature_engineering.py):
+Builds model-ready features.
+- Model Training (src/train_model.py):
+Trains the machine learning model.
+- Launch Streamlit App (app.py):
+Starts the interactive web interface for predictions.

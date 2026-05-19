@@ -5,7 +5,7 @@ def load_raw_data():
     """
     Load raw data files.
     """
-    games_path = 'data/data/games.csv'
+    games_path = 'data/games.csv'
     team_logs_path = 'data/raw/team_game_logs.csv'
     
     if os.path.exists(games_path):

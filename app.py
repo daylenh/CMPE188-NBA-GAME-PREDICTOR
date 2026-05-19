@@ -8,7 +8,7 @@ from nba_api.stats.static import teams
 # Load data
 @st.cache_data
 def load_data():
-    games_df = pd.read_csv('data/data/games.csv')
+    games_df = pd.read_csv('data/games.csv')
     processed_df = pd.read_csv('data/processed/processed_games.csv')
     return games_df, processed_df
 
